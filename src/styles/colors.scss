@@ -1,0 +1,10 @@
+$background-primary: #fff;
+$board-primary: #969696;
+$background-accent: darkred;
+$background-secondary: rgba(47, 8, 8, 0.53);
+
+#app.dark {
+  $background-primary: #000;
+  $background-accent: #6c6b6b;
+  $background-secondary: rgba(126, 126, 126, 0.53);
+}

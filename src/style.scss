@@ -1,0 +1,57 @@
+@import "styles/colors";
+
+* {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#app {
+  background-color: $background-primary;
+  height: 100vh;
+}
+
+.borderHorizontalLine {
+  height: 1px;
+  left: 0;
+  right: 0;
+  width: var(--horizontal-line-width);
+}
+
+.borderVerticalLine {
+  width: 1px;
+  height: var(--vertical-line-height);
+  top: 0;
+  bottom: 0;
+}
+
+.borderHorizontalLine, .borderVerticalLine {
+  background-color: $board-primary;
+  position: absolute;
+  z-index: 2;
+}
+
+.snakeCell {
+  background-color: $background-accent;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  position: absolute;
+
+  &.killed {
+    background-color: $background-secondary;
+  }
+}
+
+.eat {
+  position: absolute;
+  background-color: $background-accent;
+  width: var(--cell-size);
+  height: var(--cell-size);
+
+}
