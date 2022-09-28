@@ -14,7 +14,9 @@
 
 #app {
   background-color: $background-primary;
-  height: 100vh;
+  width: var(--game-width);
+  height: var(--game-height);
+  position: relative;
 }
 
 .borderHorizontalLine {
@@ -35,23 +37,4 @@
   background-color: $board-primary;
   position: absolute;
   z-index: 2;
-}
-
-.snakeCell {
-  background-color: $background-accent;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  position: absolute;
-
-  &.killed {
-    background-color: $background-secondary;
-  }
-}
-
-.eat {
-  position: absolute;
-  background-color: $background-accent;
-  width: var(--cell-size);
-  height: var(--cell-size);
-
 }

@@ -3,7 +3,11 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "commonjs",
-    "lib": ["ESNext", "DOM"],
+    "lib": [
+      "ESNext",
+      "DOM",
+      "dom"
+    ],
     "moduleResolution": "Node",
     "strict": true,
     "sourceMap": true,
@@ -19,8 +23,7 @@
     "outDir": "./dist",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "include": ["src"]
+    }
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }
