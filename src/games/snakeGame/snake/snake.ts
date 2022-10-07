@@ -1,12 +1,11 @@
 import { ModuleElement } from "@/core/moduleElement/moduleElement";
 import { ICreateElementProps } from "@/core/element/interfaces";
 import { ICords } from "@/core/interfaces";
-import { ESnakeDirection } from "@/snakeGame/snake/interfaces";
-import { SnakeGame } from "@/snakeGame";
-import { CELL_SIZE } from "@/core/constants";
-import { generateId } from "@/snakeGame/utils/generateId";
+import { ESnakeDirection } from "@/games/snakeGame/snake/interfaces";
+import { generateId } from "@/games/snakeGame/utils/generateId";
 import { cordsToString } from "@/core/utils";
-import myMinDistanceSimpleAlg from "@/snakeGame/algorithms/myMinDistanceSimple";
+import myMinDistanceSimpleAlg from "@/games/snakeGame/algorithms/myMinDistanceSimple";
+import { SnakeGame } from "@/games/snakeGame/snakeGame";
 
 export class Snake extends ModuleElement {
   readonly bodyFillColor: string;
@@ -43,6 +42,13 @@ export class Snake extends ModuleElement {
     return this.elementsList[this.elementsList.length - 1];
   }
 
+  addSnakeElement(props: Omit<ICreateElementProps, "view" | "cellSize">) {
+    this.addElement({
+      cellSize: this.snakeGame.model.cellSize,
+      ...props,
+    });
+  }
+
   addBodyElement() {
     const tailCords = Object.assign(
       {},
@@ -54,17 +60,18 @@ export class Snake extends ModuleElement {
 
     this.go();
 
-    this.addElement({
+    this.addSnakeElement({
       fillColor: this.bodyFillColor,
-      cellSize: this.snakeGame.cellSize,
       ...tailCords,
     });
   }
 
-  addHeadElement(props: Omit<ICreateElementProps, "fillColor" | "view">) {
-    this.addElement({
-      ...props,
+  addHeadElement(
+    props: Omit<ICreateElementProps, "fillColor" | "view" | "cellSize">
+  ) {
+    this.addSnakeElement({
       fillColor: this.headFillColor,
+      ...props,
     });
   }
 
@@ -76,32 +83,35 @@ export class Snake extends ModuleElement {
     switch (this.direction) {
       case ESnakeDirection.R:
         return {
-          x: (this.head.x + 1) % this.snakeGame.boardSizeX,
+          x: (this.head.x + 1) % this.snakeGame.model.boardSizeX,
           y: this.head.y,
         };
       case ESnakeDirection.D:
         return {
           x: this.head.x,
-          y:
-            (!this.head.y ? this.snakeGame.boardSizeY - 1 : this.head.y - 1) %
-            this.snakeGame.boardSizeY,
+          y: !this.head.y
+            ? this.snakeGame.model.boardSizeY - 1
+            : this.head.y - 1,
         };
       case ESnakeDirection.L:
         return {
-          x: !this.head.x ? this.snakeGame.boardSizeX - 1 : this.head.x - 1,
+          x: !this.head.x
+            ? this.snakeGame.model.boardSizeX - 1
+            : this.head.x - 1,
           y: this.head.y,
         };
       case ESnakeDirection.U:
         return {
           x: this.head.x,
-
-          y: (this.head.y + 1) % this.snakeGame.boardSizeY,
+          y: (this.head.y + 1) % this.snakeGame.model.boardSizeY,
         };
     }
   }
 
   go() {
-    const snakeElement = this.snakeGame.getSnakeElement(this.headNextCords);
+    const snakeElement = this.snakeGame.model.getSnakeElement(
+      this.headNextCords
+    );
 
     if (snakeElement && this.head.id !== snakeElement.id) {
       this.kill();
@@ -119,7 +129,7 @@ export class Snake extends ModuleElement {
     });
 
     try {
-      const eat = this.snakeGame.getEat(cordsToString(this.head));
+      const eat = this.snakeGame.model.getEat(cordsToString(this.head));
 
       eat.rerender();
 
@@ -145,7 +155,6 @@ export class Snake extends ModuleElement {
   ) {
     this.addHeadElement({
       ...startPosition,
-      cellSize: CELL_SIZE,
     });
     this.addBodyElement();
     this.addBodyElement();

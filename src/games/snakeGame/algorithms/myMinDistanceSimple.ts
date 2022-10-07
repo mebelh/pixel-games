@@ -1,14 +1,14 @@
-import { ESnakeDirection } from "@/snakeGame/snake/interfaces";
-import { TGetDirectionAlgorithm } from "@/snakeGame/algorithms/interfaces";
-import findNearestEat from "@/snakeGame/algorithms/findNearestEat";
+import { ESnakeDirection } from "@/games/snakeGame/snake/interfaces";
+import { TGetDirectionAlgorithm } from "@/games/snakeGame/algorithms/interfaces";
+import findNearestEat from "@/games/snakeGame/algorithms/findNearestEat";
 
 const myMinDistanceSimpleAlg: TGetDirectionAlgorithm = (snake) => {
-  const { eatList } = snake.snakeGame;
+  const { eatList } = snake.snakeGame.model;
   const { head, direction, headNextCords, snakeGame } = snake;
 
   const nearestEat = findNearestEat(head, eatList);
 
-  const snakeElement = snakeGame.getSnakeElement(headNextCords);
+  const snakeElement = snakeGame.model.getSnakeElement(headNextCords);
 
   if (snakeElement) {
     if (direction === ESnakeDirection.D || direction === ESnakeDirection.U) {

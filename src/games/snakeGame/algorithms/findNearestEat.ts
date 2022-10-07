@@ -1,9 +1,12 @@
 import { ICords } from "@/core/interfaces";
-import { SnakeGame } from "@/snakeGame";
-import { Eat } from "@/snakeGame/eat/eat";
-import { calcDistance } from "@/snakeGame/utils/distance";
+import { Eat } from "@/games/snakeGame/eat/eat";
+import { calcDistance } from "@/games/snakeGame/utils/distance";
+import { SnakeGame } from "@/games/snakeGame/snakeGame";
 
-function findNearestEat(headCords: ICords, eatList: SnakeGame["eatList"]): Eat {
+function findNearestEat(
+  headCords: ICords,
+  eatList: SnakeGame["model"]["eatList"]
+): Eat {
   return eatList.reduce<{
     minDistance: number;
     res: Eat;

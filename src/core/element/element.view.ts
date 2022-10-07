@@ -1,6 +1,5 @@
 import { View } from "@/core/view";
 import { ElementModel } from "@/core/element/element.model";
-import { CELL_SIZE } from "@/core/constants";
 
 export class ElementView {
   $el: HTMLDivElement;
@@ -15,8 +14,8 @@ export class ElementView {
     this.$container = $container;
   }
 
-  getStyle(margin: number): string {
-    return CELL_SIZE * margin + "px";
+  private getStyle(cellSize: number, margin: number): string {
+    return cellSize * margin + "px";
   }
 
   render(element: ElementModel): void {
@@ -34,8 +33,8 @@ export class ElementView {
 
     this.$el.style.backgroundColor = element.fillColor;
 
-    this.$el.style.left = this.getStyle(element.x);
-    this.$el.style.bottom = this.getStyle(element.y);
+    this.$el.style.left = this.getStyle(element.cellSize, element.x);
+    this.$el.style.bottom = this.getStyle(element.cellSize, element.y);
   }
 
   destroy() {

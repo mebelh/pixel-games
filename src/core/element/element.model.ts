@@ -3,7 +3,7 @@ import {
   ICreateElementProps,
 } from "@/core/element/interfaces";
 import { cordsToString } from "@/core/utils";
-import { generateId } from "@/snakeGame/utils/generateId";
+import { generateId } from "@/games/snakeGame/utils/generateId";
 
 export class ElementModel {
   private _x: number;
@@ -12,7 +12,7 @@ export class ElementModel {
   private _prevY: ElementModel["_y"];
   private subscribers: ChangeElementSubscriber[];
   _fillColor: string;
-  private readonly cellSize: number;
+  readonly cellSize: number;
   id: string;
 
   constructor({ x, y, fillColor, cellSize }: ICreateElementProps) {

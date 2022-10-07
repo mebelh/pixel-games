@@ -1,14 +1,27 @@
-import { EBoardLineDirection } from "@/core/interfaces";
 import { View } from "@/core/view";
-import { SnakeGame } from "@/snakeGame";
+import { EBoardLineDirection } from "@/core/interfaces";
+import { BoardModel } from "@/core/board/board.model";
+import { IInitBoardProps } from "@/core/board/interfaces";
 
-export class BoardView {
+export class Board {
   private readonly view: View;
-  private readonly model: SnakeGame;
+  private readonly model: BoardModel;
 
-  constructor(model: SnakeGame, view: View) {
+  constructor({ boardSize, cellSize, view }: IInitBoardProps) {
     this.view = view;
-    this.model = model;
+    this.model = new BoardModel(boardSize, cellSize);
+  }
+
+  private setVerticalLineHeightCss(height: string) {
+    this.view.setCssVar("--vertical-line-height", height);
+  }
+
+  private setHorizontalLineWidthCss(width: string) {
+    this.view.setCssVar("--horizontal-line-width", width);
+  }
+
+  private setCellSizeCss(size: number) {
+    this.view.setCssVar("--cell-size", size + "px");
   }
 
   private createBoardLine(direction: EBoardLineDirection, margin: number = 0) {
@@ -20,9 +33,9 @@ export class BoardView {
     const $line = this.view.createElement("div", [elemClassName]);
 
     if (direction === EBoardLineDirection.Horizontal) {
-      $line.style.marginTop = margin * this.view.cellSize + "px";
+      $line.style.marginTop = margin * this.model.cellSize + "px";
     } else {
-      $line.style.marginLeft = margin * this.view.cellSize + "px";
+      $line.style.marginLeft = margin * this.model.cellSize + "px";
     }
 
     return $line;
@@ -44,18 +57,6 @@ export class BoardView {
     }
 
     this.view.renderElemToRoot(board);
-  }
-
-  private setVerticalLineHeightCss(height: string) {
-    this.view.setCssVar("--vertical-line-height", height);
-  }
-
-  private setHorizontalLineWidthCss(width: string) {
-    this.view.setCssVar("--horizontal-line-width", width);
-  }
-
-  private setCellSizeCss(size: number) {
-    this.view.setCssVar("--cell-size", size + "px");
   }
 
   init() {

@@ -1,6 +1,6 @@
-import { setStyle } from "@/snakeGame/utils/setStyle";
-import { SnakeGame } from "@/snakeGame/index";
+import { setStyle } from "@/games/snakeGame/utils/setStyle";
 import { View } from "@/core/view";
+import { SnakeGame } from "@/games/snakeGame/snakeGame";
 
 export class SnakeGameInterface {
   $addSnakeBtn: HTMLButtonElement;
@@ -44,8 +44,6 @@ export class SnakeGameInterface {
     });
 
     $button.innerHTML = "Add snake";
-
-    console.log(this);
 
     $button.addEventListener("click", () => this.snakeGame.addRandomSnake());
 

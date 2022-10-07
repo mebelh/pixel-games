@@ -1,4 +1,4 @@
-import { objectKeys } from "@/snakeGame/utils/objectKeys";
+import { objectKeys } from "@/games/snakeGame/utils/objectKeys";
 
 export function setStyle(
   $el: HTMLElement,

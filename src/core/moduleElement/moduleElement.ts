@@ -6,7 +6,7 @@ import { ICreateElementProps } from "@/core/element/interfaces";
 import { Element } from "@/core/element/element";
 import { cordsToString } from "@/core/utils";
 import { View } from "@/core/view";
-import { generateId } from "@/snakeGame/utils/generateId";
+import { generateId } from "@/games/snakeGame/utils/generateId";
 
 export class ModuleElement {
   readonly elementsMap: IElementsMap;

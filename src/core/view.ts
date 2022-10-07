@@ -1,8 +1,7 @@
-import { CELL_SIZE, DARK_THEME_KEY } from "@/core/constants";
+import { DARK_THEME_KEY } from "@/core/constants";
 
 export class View {
   private readonly $root: HTMLDivElement;
-  readonly cellSize: number;
 
   constructor() {
     const root = this.getElement<HTMLDivElement>("app");
@@ -11,7 +10,6 @@ export class View {
     }
 
     this.$root = root;
-    this.cellSize = CELL_SIZE;
   }
 
   getElement<T extends HTMLElement>(id: string): T {

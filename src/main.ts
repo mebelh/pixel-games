@@ -1,17 +1,28 @@
-import "./style.scss";
-import { BoardView } from "@/core/board/board.view";
-import { SnakeGame } from "@/snakeGame";
-import { CELL_SIZE } from "@/core/constants";
-import { SnakeGameInterface } from "@/snakeGame/interface";
-import { View } from "@/core/view";
+import { tankGame } from "@/games/tankGame";
+import { snakeGame } from "@/games/snakeGame";
 
-function start() {
-  const view = new View();
-  const snakeGame = new SnakeGame(view, [40, 40], CELL_SIZE, 20, 1);
-  const board = new BoardView(snakeGame, view);
-  new SnakeGameInterface(snakeGame);
+class Games {
+  private readonly snakeGame: typeof snakeGame;
+  private readonly tankGame: typeof tankGame;
 
-  board.init();
+  constructor() {
+    this.snakeGame = snakeGame;
+    this.tankGame = tankGame;
+  }
+
+  startSnakeGame() {
+    this.snakeGame();
+  }
+
+  startTankGame() {
+    this.tankGame();
+  }
 }
 
-start();
+const games = new Games();
+
+function boot() {
+  games.startSnakeGame();
+}
+
+boot();

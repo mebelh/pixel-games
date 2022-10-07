@@ -1,7 +1,7 @@
 import { ICords } from "@/core/interfaces";
 import { Element } from "@/core/element/element";
-import { SnakeGame } from "@/snakeGame";
 import { getRandomNumber } from "@/core/utils";
+import { SnakeGame } from "@/games/snakeGame/snakeGame";
 
 export class Eat extends Element {
   value: number;
@@ -16,7 +16,7 @@ export class Eat extends Element {
     super({
       view: snakeGame.view,
       ...initCords,
-      cellSize: snakeGame.cellSize,
+      cellSize: snakeGame.model.cellSize,
       fillColor,
     });
     this.value = value;
@@ -26,7 +26,7 @@ export class Eat extends Element {
   }
 
   rerender() {
-    this.x = getRandomNumber(0, this.snakeGame.boardSizeX);
-    this.y = getRandomNumber(0, this.snakeGame.boardSizeY);
+    this.x = getRandomNumber(0, this.snakeGame.model.boardSizeX);
+    this.y = getRandomNumber(0, this.snakeGame.model.boardSizeY);
   }
 }
