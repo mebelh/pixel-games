@@ -1,28 +1,25 @@
-import {
-  ChangeElementSubscriber,
-  ICreateElementProps,
-} from "@/core/element/interfaces";
+import { ICreateElementProps } from "@/core/element/interfaces";
 import { cordsToString } from "@/core/utils";
 import { generateId } from "@/games/snakeGame/utils/generateId";
+import { Model } from "@/core/model";
 
-export class ElementModel {
+export class ElementModel extends Model<ElementModel> {
   private _x: number;
   private _y: number;
   private _prevX: ElementModel["_x"];
   private _prevY: ElementModel["_y"];
-  private subscribers: ChangeElementSubscriber[];
   _fillColor: string;
   readonly cellSize: number;
   id: string;
 
   constructor({ x, y, fillColor, cellSize }: ICreateElementProps) {
+    super();
     this._y = y;
     this._x = x;
     this._prevX = NaN;
     this._prevY = NaN;
 
     this._fillColor = fillColor;
-    this.subscribers = [];
     this.cellSize = cellSize;
     this.id = generateId();
   }
@@ -70,20 +67,6 @@ export class ElementModel {
 
   get cellSizeStyle(): string {
     return this.cellSize + "px";
-  }
-
-  emitChange() {
-    this.subscribers.forEach((fn) => {
-      fn(this);
-    });
-  }
-
-  subscribeOnChanges(fn: ChangeElementSubscriber): () => void {
-    this.subscribers.push(fn);
-
-    return () => {
-      this.subscribers = this.subscribers.filter((el) => el !== fn);
-    };
   }
 
   destroy() {}

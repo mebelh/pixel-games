@@ -1,5 +1,6 @@
 import { View } from "@/core/view";
 import { ElementModel } from "@/core/element/element.model";
+import { setStyle } from "@/games/snakeGame/utils/setStyle";
 
 export class ElementView {
   $el: HTMLDivElement;
@@ -14,11 +15,11 @@ export class ElementView {
     this.$container = $container;
   }
 
-  private getStyle(cellSize: number, margin: number): string {
+  private getMarginStyle(cellSize: number, margin: number): string {
     return cellSize * margin + "px";
   }
 
-  render(element: ElementModel): void {
+  render(elementModel: ElementModel): void {
     if (!this.isRendered) {
       if (this.$container) {
         this.$container.appendChild(this.$el);
@@ -26,15 +27,19 @@ export class ElementView {
         this.view.renderElemToRoot(this.$el);
       }
       this.isRendered = true;
-      this.$el.style.position = "absolute";
-      this.$el.style.width = element.cellSizeStyle;
-      this.$el.style.height = element.cellSizeStyle;
+      setStyle(this.$el, {
+        position: "absolute",
+        width: elementModel.cellSizeStyle,
+        height: elementModel.cellSizeStyle,
+        transition: "all ease .1s",
+      });
     }
 
-    this.$el.style.backgroundColor = element.fillColor;
-
-    this.$el.style.left = this.getStyle(element.cellSize, element.x);
-    this.$el.style.bottom = this.getStyle(element.cellSize, element.y);
+    setStyle(this.$el, {
+      background: elementModel.fillColor,
+      left: this.getMarginStyle(elementModel.cellSize, elementModel.x),
+      bottom: this.getMarginStyle(elementModel.cellSize, elementModel.y),
+    });
   }
 
   destroy() {

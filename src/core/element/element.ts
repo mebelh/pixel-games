@@ -13,7 +13,7 @@ export class Element {
     this.model.subscribeOnChanges(this.render);
   }
 
-  subscribeOnChanges: ElementModel["subscribeOnChanges"] = (fn) => {
+  public subscribeOnChanges: ElementModel["subscribeOnChanges"] = (fn) => {
     return this.model.subscribeOnChanges(fn);
   };
 

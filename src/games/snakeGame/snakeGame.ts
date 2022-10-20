@@ -7,20 +7,9 @@ import { Game } from "@/core/game/game";
 import { SnakeGameModel } from "@/games/snakeGame/snakeGame.model";
 
 export class SnakeGame extends Game<SnakeGameModel> {
-  constructor({
-    boardSize,
-    cellSize,
-    initEatNumber,
-    eatValue,
-  }: TInitSnakeGameProps) {
+  constructor({ initEatNumber, ...initModelProps }: TInitSnakeGameProps) {
     super({
-      boardSize,
-      cellSize,
-      model: new SnakeGameModel({
-        eatValue,
-        cellSize,
-        boardSize,
-      }),
+      model: new SnakeGameModel(initModelProps),
     });
     this.renderEat(initEatNumber);
     this.addRandomSnake();

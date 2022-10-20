@@ -19,4 +19,8 @@ export abstract class Game<T extends GameModel> {
 
     this.board.init();
   }
+
+  init() {
+    throw new Error("init needs to be implemented");
+  }
 }

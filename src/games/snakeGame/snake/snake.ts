@@ -21,7 +21,7 @@ export class Snake extends ModuleElement {
     bodyFillColor: string,
     snakeGame: Snake["snakeGame"]
   ) {
-    super(snakeGame.view);
+    super(snakeGame.view, snakeGame.model.cellSize);
 
     this.bodyFillColor = bodyFillColor;
     this.headFillColor = headFillColor;
@@ -43,10 +43,7 @@ export class Snake extends ModuleElement {
   }
 
   addSnakeElement(props: Omit<ICreateElementProps, "view" | "cellSize">) {
-    this.addElement({
-      cellSize: this.snakeGame.model.cellSize,
-      ...props,
-    });
+    this.addElement(props);
   }
 
   addBodyElement() {

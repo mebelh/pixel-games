@@ -10,3 +10,9 @@ export type TChangeElementCordCallback = (
   index: number,
   elements: Element[]
 ) => ICords;
+
+export type TFilterElementsCallback = (
+  element: Element,
+  index: number,
+  elements: Element[]
+) => boolean;

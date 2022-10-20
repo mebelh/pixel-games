@@ -1,7 +1,7 @@
 import "@/style.scss";
-import { CELL_SIZE } from "@/core/constants";
 import { SnakeGameInterface } from "@/games/snakeGame/interface";
 import { SnakeGame } from "@/games/snakeGame/snakeGame";
+import { CELL_SIZE } from "@/games/snakeGame/constants";
 
 export function snakeGame() {
   const snakeGame = new SnakeGame({
