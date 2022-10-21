@@ -10,7 +10,7 @@ import { View } from "@/core/view";
 import { generateId } from "@/games/snakeGame/utils/generateId";
 
 export class ModuleElement {
-  private elementsMap: IElementsMap;
+  elementsMap: IElementsMap;
   private readonly $container: HTMLDivElement;
   readonly id: string;
   readonly view: View;
@@ -95,15 +95,6 @@ export class ModuleElement {
     if (this.elementsMap[element.stringCords]) {
       throw new Error("Element already exists");
     }
-    // element.subscribeOnChanges((elementModel) => {
-    //   delete this.elementsMap[
-    //     cordsToString({
-    //       x: elementModel.prevX,
-    //       y: elementModel.prevY,
-    //     })
-    //   ];
-    //   this.elementsMap[cordsToString(elementModel)] = element;
-    // });
     this.elementsMap[cordsToString(element)] = element;
   }
 }

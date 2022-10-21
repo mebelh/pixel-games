@@ -8,16 +8,21 @@ import { getRandomNumber } from "@/core/utils";
 import { COS, SIN, TANK_GAME_ROTATE_MAP } from "@/games/tankGame/constants";
 import { Missile } from "@/games/tankGame/missile/missile";
 import { TankGame } from "@/games/tankGame/tankGame";
+import { TObservableOn } from "@/core/observeble/interfaces";
+import { makeObservable } from "@/core/observeble/observable";
 
 export class Tank extends ModuleElement {
   model: TankModel;
   private readonly tankGame: TankGame;
+  on: TObservableOn<Tank>;
 
   constructor({ tankGame }: IInitTankProps) {
     super(tankGame.view, tankGame.model.cellSize);
     this.tankGame = tankGame;
 
     this.model = getTankModel();
+
+    this.on = makeObservable(this as Tank);
 
     const startPositionX = getRandomNumber(1, tankGame.model.boardSizeX - 1);
     const startPositionY = getRandomNumber(1, tankGame.model.boardSizeY - 1);
@@ -55,19 +60,21 @@ export class Tank extends ModuleElement {
 
     this.syncDirection();
 
+    this.on("elementsMap", () => {
+      this.syncDirection();
+    });
+
     tankGame.view.addEventListenerToRoot("keydown", (event) => {
       switch (event.code) {
         case "ArrowLeft":
           this.rotate({
             direction: ETankDirection.L,
           });
-          this.syncDirection();
           break;
         case "ArrowRight":
           this.rotate({
             direction: ETankDirection.R,
           });
-          this.syncDirection();
           break;
         case "ArrowUp":
           this.go();

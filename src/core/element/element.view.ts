@@ -31,7 +31,7 @@ export class ElementView {
         position: "absolute",
         width: elementModel.cellSizeStyle,
         height: elementModel.cellSizeStyle,
-        transition: "all ease .1s",
+        // transition: "all ease .1s",
       });
     }
 

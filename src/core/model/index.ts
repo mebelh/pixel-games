@@ -2,11 +2,9 @@ import { TOnChangeModel } from "@/core/model/interfaces";
 
 export abstract class Model<T extends Model<any>> {
   private subscribers: Array<TOnChangeModel<T>>;
-  a: any;
 
   protected constructor() {
     this.subscribers = [];
-    this.a = {};
   }
 
   onChange(target: Model<T>, p: string | symbol, newValue: any, receiver: any) {
