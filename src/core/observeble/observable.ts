@@ -1,8 +1,4 @@
-import {
-  TObservableFn,
-  TObservableSubscribers,
-  TObservableOn,
-} from "./interfaces";
+import { TObservableSubscribers, TObservableOn } from "./interfaces";
 
 export function makeObservable<T extends Object>(target: T): TObservableOn<T> {
   const keys: Array<keyof T> = Object.keys(target) as Array<keyof T>;
@@ -36,7 +32,7 @@ export function makeObservable<T extends Object>(target: T): TObservableOn<T> {
     });
   });
 
-  return (key: keyof T, fn: TObservableFn<T[keyof T]>) => {
+  return (key, fn) => {
     subscribers[key].push(fn);
 
     return () => {

@@ -3,7 +3,7 @@ import { ICreateElementProps } from "@/core/element/interfaces";
 import { ICords } from "@/core/interfaces";
 import { ESnakeDirection } from "@/games/snakeGame/snake/interfaces";
 import { generateId } from "@/games/snakeGame/utils/generateId";
-import { cordsToString } from "@/core/utils";
+import { cordsToString, getRandomNumber } from "@/core/utils";
 import myMinDistanceSimpleAlg from "@/games/snakeGame/algorithms/myMinDistanceSimple";
 import { SnakeGame } from "@/games/snakeGame/snakeGame";
 
@@ -31,7 +31,10 @@ export class Snake extends ModuleElement {
 
     this.id = generateId();
 
-    this.init();
+    this.init({
+      x: getRandomNumber(0, this.snakeGame.model.boardSizeX),
+      y: getRandomNumber(0, this.snakeGame.model.boardSizeY),
+    });
   }
 
   get head() {
@@ -106,6 +109,10 @@ export class Snake extends ModuleElement {
   }
 
   go() {
+    if (this.isKilled) {
+      return;
+    }
+
     const snakeElement = this.snakeGame.model.getSnakeElement(
       this.headNextCords
     );
@@ -160,6 +167,6 @@ export class Snake extends ModuleElement {
       const direction = myMinDistanceSimpleAlg(this);
       this.setDirection(direction);
       this.go();
-    }, 100);
+    }, 10);
   }
 }

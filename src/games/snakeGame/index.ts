@@ -5,10 +5,10 @@ import { CELL_SIZE } from "@/games/snakeGame/constants";
 
 export function snakeGame() {
   const snakeGame = new SnakeGame({
-    boardSize: [50, 40],
+    boardSize: [200, 160],
     cellSize: CELL_SIZE,
     eatValue: 1,
-    initEatNumber: 30,
+    initEatNumber: 800,
   });
   new SnakeGameInterface(snakeGame);
 }

@@ -5,7 +5,7 @@ export function tankGame() {
   const game = new TankGame({
     initStartPayers: 3,
     cellSize: CELL_SIZE,
-    boardSize: [50, 40],
+    boardSize: [500, 400],
   });
 
   game.init();

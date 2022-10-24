@@ -8,7 +8,6 @@ import { getRandomColor } from "@/games/snakeGame/utils/getRandomColor";
 import { Eat } from "@/games/snakeGame/eat/eat";
 import { Snake } from "@/games/snakeGame/snake/snake";
 import { cordsToString } from "@/core/utils";
-import { IElementsMap } from "@/core/moduleElement/interfaces";
 import { ICords } from "@/core/interfaces";
 
 export class SnakeGameModel extends GameModel {
@@ -26,18 +25,12 @@ export class SnakeGameModel extends GameModel {
     this.eatColor = getRandomColor();
   }
 
-  get snakeElements() {
-    return Object.values(this.snakeMap).reduce<IElementsMap>(
-      (acc, snake) => ({
-        ...snake.elementsMap,
-        ...acc,
-      }),
-      {}
-    );
-  }
-
   getSnakeElement(cords: ICords) {
-    return this.snakeElements[cordsToString(cords)];
+    return Object.values(this.snakeMap).find((snake) => {
+      return snake.elementsList.find(
+        (el) => el.x === cords.x && el.y === cords.y
+      );
+    });
   }
 
   setEat(eat: Eat) {

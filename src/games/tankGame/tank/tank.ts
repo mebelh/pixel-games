@@ -133,12 +133,12 @@ export class Tank extends ModuleElement {
 
   shot = () => {
     if (!this.model.canShot) {
-      setTimeout(() => {
-        this.model.canShot = true;
-      }, 100);
-
       return;
     }
+
+    setTimeout(() => {
+      this.model.canShot = true;
+    }, 400);
 
     this.model.canShot = false;
 
@@ -157,7 +157,21 @@ export class Tank extends ModuleElement {
     this.model.missilesList.push(missile);
   };
 
+  get isCanGo(): boolean {
+    return !(
+      (!this.gunElement.x && this.model.direction === ETankDirection.L) ||
+      (!this.gunElement.y && this.model.direction === ETankDirection.D) ||
+      (this.gunElement.x === this.tankGame.model.boardSizeX - 1 &&
+        this.model.direction === ETankDirection.R) ||
+      (this.gunElement.y === this.tankGame.model.boardSizeY - 1 &&
+        this.model.direction === ETankDirection.U)
+    );
+  }
+
   go() {
+    if (!this.isCanGo) {
+      return;
+    }
     switch (this.model.direction) {
       case ETankDirection.U:
         this.setElements(({ x, y }) => ({

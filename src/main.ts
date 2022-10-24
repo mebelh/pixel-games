@@ -22,7 +22,7 @@ class Games {
 const games = new Games();
 
 function boot() {
-  games.startTankGame();
+  games.startSnakeGame();
 }
 
 boot();

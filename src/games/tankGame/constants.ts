@@ -1,7 +1,7 @@
 import { ETankDirection } from "@/games/tankGame/tank/interface";
 import { TDegree, TDegreeMap } from "@/games/tankGame/interfaces";
 
-export const CELL_SIZE = 20;
+export const CELL_SIZE = 2;
 
 export const COS: TDegreeMap = {
   0: 1,

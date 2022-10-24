@@ -7,10 +7,6 @@ export abstract class Model<T extends Model<any>> {
     this.subscribers = [];
   }
 
-  onChange(target: Model<T>, p: string | symbol, newValue: any, receiver: any) {
-    console.log(target, p, newValue, receiver);
-  }
-
   emitChange() {
     this.subscribers.forEach((fn) => {
       fn(this as any);
