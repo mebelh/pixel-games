@@ -63,6 +63,9 @@ export class Element {
 
   destroy(): void {
     this.view.destroy();
-    this.model.destroy();
+    // this.model.destroy();
+    this.onDestroy();
   }
+
+  onDestroy(): void {}
 }

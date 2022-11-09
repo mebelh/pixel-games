@@ -121,7 +121,7 @@ export class Snake extends ModuleElement {
       this.kill();
     }
 
-    this.setElements((_, index, elements) => {
+    this.setElementsSync((_, index, elements) => {
       if (!index) {
         return this.headNextCords;
       }

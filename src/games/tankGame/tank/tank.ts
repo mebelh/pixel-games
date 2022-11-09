@@ -174,25 +174,25 @@ export class Tank extends ModuleElement {
     }
     switch (this.model.direction) {
       case ETankDirection.U:
-        this.setElements(({ x, y }) => ({
+        this.setElementsSync(({ x, y }) => ({
           x,
           y: y + 1,
         }));
         break;
       case ETankDirection.R:
-        this.setElements(({ x, y }) => ({
+        this.setElementsSync(({ x, y }) => ({
           x: x + 1,
           y,
         }));
         break;
       case ETankDirection.D:
-        this.setElements(({ x, y }) => ({
+        this.setElementsSync(({ x, y }) => ({
           x,
           y: y - 1,
         }));
         break;
       case ETankDirection.L:
-        this.setElements(({ x, y }) => ({
+        this.setElementsSync(({ x, y }) => ({
           x: x - 1,
           y,
         }));

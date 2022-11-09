@@ -20,7 +20,7 @@ export abstract class Game<T extends GameModel> {
     this.board.init();
   }
 
-  init() {
+  init(..._: any[]) {
     throw new Error("init needs to be implemented");
   }
 }
