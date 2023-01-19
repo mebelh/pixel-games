@@ -66,16 +66,6 @@ export class LifeGame extends Game<GameModel> {
   }
 
   init(initialPointsNumber: number) {
-    // this.view.addEventListenerToRoot("mouseup", () => {
-    //   this.isMouseDown = false;
-    // });
-    // this.view.addEventListenerToRoot("mousedown", () => {
-    //   this.isMouseDown = true;
-    // });
-    // this.view.addEventListenerToRoot("mousemove", (ev) => {
-    //   console.log(ev.x, ev.y);
-    // });
-
     new Array(initialPointsNumber).fill(0).forEach(() => {
       try {
         this.elements.addElement({

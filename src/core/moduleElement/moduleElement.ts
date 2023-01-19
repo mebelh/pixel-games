@@ -29,8 +29,8 @@ export class ModuleElement {
     view.renderElemToRoot(this.$container);
   }
 
-  get elementsList() {
-    return Object.values(this.elementsMap);
+  get elementsList(): Element[] {
+    return Object.values(this.elementsMap).filter(Boolean) as Element[];
   }
 
   get reversedElementsList() {
@@ -39,7 +39,7 @@ export class ModuleElement {
   }
 
   getElement(cords: ICords) {
-    return this.elementsMap[cordsToString(cords)] || null;
+    return this.elementsMap[cordsToString(cords)] ?? null;
   }
 
   forEach(callBack: TForEachElementCallback, isReversed?: boolean) {
@@ -143,7 +143,7 @@ export class ModuleElement {
     });
 
     deletedElements.forEach((cords) => {
-      newElementsMap[cordsToString(cords)].destroy();
+      newElementsMap[cordsToString(cords)]?.destroy();
     });
 
     this.elementsMap = newElementsMap;
