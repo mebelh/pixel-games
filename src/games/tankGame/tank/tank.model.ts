@@ -1,5 +1,5 @@
-import { ETankDirection } from "@/games/tankGame/tank/interface";
 import { Model } from "@/core/model";
+import { EMoveDirection } from "@/core/moduleElement/interfaces";
 import { getRandomColor } from "@/games/snakeGame/utils/getRandomColor";
 import { generateId } from "@/games/snakeGame/utils/generateId";
 import { Missile } from "@/games/tankGame/missile/missile";
@@ -7,7 +7,7 @@ import { makeObservable } from "@/core/observeble/observable";
 import { TObservableOn } from "@/core/observeble/interfaces";
 
 export class TankModel extends Model<TankModel> {
-  direction: ETankDirection;
+  direction: EMoveDirection;
   readonly id: string;
   public fillColor: string;
   readonly missilesList: Missile[];
@@ -17,7 +17,7 @@ export class TankModel extends Model<TankModel> {
 
   constructor() {
     super();
-    this.direction = ETankDirection.R;
+    this.direction = EMoveDirection.R;
     this.missilesList = [];
     this.fillColor = getRandomColor();
     this.id = generateId();

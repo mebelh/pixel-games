@@ -1,7 +1,6 @@
-import { DARK_THEME_KEY } from "@/core/constants";
-
 export class View {
   private readonly $root: HTMLDivElement;
+  private readonly keyDownListeners: Array<(code: string) => void>;
 
   constructor() {
     const root = this.getElement<HTMLDivElement>("app");
@@ -10,6 +9,12 @@ export class View {
     }
 
     this.$root = root;
+    this.keyDownListeners = [];
+
+    this.addEventListenerToRoot("keydown", (e) => {
+      e.preventDefault();
+      this.emitKeydownEvent(e.code);
+    });
   }
 
   getElement<T extends HTMLElement>(id: string): T {
@@ -40,22 +45,22 @@ export class View {
     return element;
   }
 
-  addEventListenerToRoot<T extends keyof HTMLElementEventMap>(
+  private addEventListenerToRoot<T extends keyof HTMLElementEventMap>(
     eventKey: T,
     callback: (ev: HTMLElementEventMap[T]) => void
   ) {
     document.addEventListener(eventKey, callback);
   }
 
+  private emitKeydownEvent(code: string) {
+    this.keyDownListeners.forEach((listener) => listener(code));
+  }
+
+  onKeydown = (cb: (code: string) => void) => {
+    this.keyDownListeners.push(cb);
+  };
+
   renderElemToRoot<T extends HTMLElement>(elem: T) {
     this.$root.appendChild(elem);
-  }
-
-  setCssVar(key: string, value: string) {
-    this.$root.style.setProperty(key, value);
-  }
-
-  toggleTheme() {
-    this.$root.classList.toggle(DARK_THEME_KEY);
   }
 }

@@ -1,46 +1,51 @@
+import { Canvas } from "@/core/canvas/canvas";
+import { Element } from "@/core/element/element";
+import { ICreateElementProps } from "@/core/element/interfaces";
+import { ICords } from "@/core/interfaces";
+import { cordsToString } from "@/core/utils";
+import { generateId } from "@/games/snakeGame/utils/generateId";
+import { ROTATE_COS, ROTATE_SIN } from "./constants";
 import {
-  IElementsMap,
+  IRotateModuleElementParams,
   TChangeElementCordCallback,
   TChangeElementCordCallbackAsync,
   TFilterElementsCallback,
   TForEachAsyncElementCallback,
   TForEachElementCallback,
-} from "@/core/moduleElement/interfaces";
-import { ICreateElementProps } from "@/core/element/interfaces";
-import { Element } from "@/core/element/element";
-import { cordsToString } from "@/core/utils";
-import { View } from "@/core/view";
-import { generateId } from "@/games/snakeGame/utils/generateId";
-import { ICords } from "@/core/interfaces";
+  ICreateModuleElementParams,
+  EMoveDirection,
+  IMoveModuleElementParams,
+} from "./interfaces";
 
 export class ModuleElement {
-  elementsMap: IElementsMap;
-  private readonly $container: HTMLDivElement;
+  elementsMap: Map<string, Element>;
   readonly id: string;
-  readonly view: View;
   readonly cellSize: number;
+  readonly canvas: Canvas;
 
-  constructor(view: View, cellSize: ModuleElement["cellSize"]) {
-    this.view = view;
-    this.elementsMap = {};
+  constructor({ canvas, cellSize, initElements }: ICreateModuleElementParams) {
+    this.elementsMap = new Map();
     this.id = generateId();
     this.cellSize = cellSize;
-    this.$container = view.createElement("div", ["Object-" + this.id]);
-    view.renderElemToRoot(this.$container);
+    this.canvas = canvas;
+    initElements?.forEach((params) => this.addElement(params));
   }
 
   get elementsList(): Element[] {
-    return Object.values(this.elementsMap).filter(Boolean) as Element[];
+    return [...this.elementsMap.values()].filter(Boolean);
   }
 
   get reversedElementsList() {
-    const length = this.elementsList.length;
-    return this.elementsList.map((_, index, els) => els[length - 1 - index]);
+    return [...this.elementsList].reverse();
   }
 
   getElement(cords: ICords) {
-    return this.elementsMap[cordsToString(cords)] ?? null;
+    return this.elementsMap.get(cordsToString(cords)) ?? null;
   }
+
+  isEmpty = (cords: ICords): boolean => {
+    return !this.getElement(cords);
+  };
 
   forEach(callBack: TForEachElementCallback, isReversed?: boolean) {
     (isReversed ? this.reversedElementsList : this.elementsList).forEach(
@@ -48,6 +53,7 @@ export class ModuleElement {
     );
   }
 
+  // Функция для перебора элементов и применения изменений после
   forEachAsync(changeFn: TForEachAsyncElementCallback, isReversed?: boolean) {
     const deletedElements: ICords[] = [];
     const newElements: ICords[] = [];
@@ -69,14 +75,14 @@ export class ModuleElement {
     );
 
     deletedElements.forEach((cords) => {
-      this.elementsMap[cordsToString(cords)]?.destroy();
+      this.elementsMap.get(cordsToString(cords))?.destroy();
+      this.elementsMap.delete(cordsToString(cords));
     });
 
     newElements.forEach((cords) => {
       try {
         this.addElement({
           ...cords,
-          container: this.$container,
           fillColor: "red",
         });
       } catch (e) {}
@@ -84,36 +90,16 @@ export class ModuleElement {
   }
 
   setElementsSync(changeFn: TChangeElementCordCallback, isReversed?: boolean) {
-    const newElementsMap: IElementsMap = {};
-
     this.forEach((element, index, elements) => {
       const cords = changeFn(element, index, elements);
-
-      element.x = cords.x;
-      element.y = cords.y;
-
-      newElementsMap[cordsToString(cords)] = element;
+      element.move(cords);
     }, isReversed);
-
-    // (isReversed ? this.reversedElementsList : this.elementsList).forEach(
-    //   (element, index, elements) => {
-    //     const cords = changeFn(element, index, elements);
-    //
-    //     element.x = cords.x;
-    //     element.y = cords.y;
-    //
-    //     newElementsMap[cordsToString(cords)] = element;
-    //   }
-    // );
-
-    this.elementsMap = newElementsMap;
   }
 
   setElementsAsync(
     changeFn: TChangeElementCordCallbackAsync,
     isReversed?: boolean
   ) {
-    const newElementsMap: IElementsMap = {};
     const deletedElements: ICords[] = [];
     const newElements: ICords[] = [];
 
@@ -129,24 +115,19 @@ export class ModuleElement {
       ? this.reversedElementsList
       : this.elementsList;
 
-    const cordsList = elementsList.map((element, index, elements) =>
+    const newCordsList = elementsList.map((element, index, elements) =>
       changeFn(element, index, elements, addElement, deleteElement)
     );
 
-    cordsList.forEach((cords, index) => {
+    newCordsList.forEach((cords, index) => {
       const element = elementsList[index];
 
-      element.x = cords.x;
-      element.y = cords.y;
-
-      newElementsMap[cordsToString(cords)] = element;
+      element.move(cords);
     });
 
     deletedElements.forEach((cords) => {
-      newElementsMap[cordsToString(cords)]?.destroy();
+      this.deleteElement(cords);
     });
-
-    this.elementsMap = newElementsMap;
 
     newElements.forEach((cords) => {
       this.addElement({
@@ -156,40 +137,36 @@ export class ModuleElement {
     });
   }
 
+  // Метод изменения элементов, соответствующих условию
   setMapElements(
     filterFn: TFilterElementsCallback,
     changeFn: TChangeElementCordCallback,
     isReversed?: boolean
   ) {
-    const newElementsMap: IElementsMap = {};
+    (isReversed ? this.reversedElementsList : this.elementsList).forEach(
+      (...props) => {
+        const areSame = filterFn(...props);
 
-    (isReversed ? this.reversedElementsList : this.elementsList)
-      .filter((...props) => {
-        const isResolved = filterFn(...props);
-        if (!isResolved) {
-          newElementsMap[cordsToString(props[0])] = props[0];
+        if (!areSame) {
+          return;
         }
-        return isResolved;
-      })
-      .forEach((element, index, elements) => {
+
+        const [element, index, elements] = props;
+
         const cords = changeFn(element, index, elements);
 
-        element.x = cords.x;
-        element.y = cords.y;
+        element.move(cords);
 
-        newElementsMap[cordsToString(cords)] = element;
-      });
-
-    this.elementsMap = {
-      ...newElementsMap,
-    };
+        this.elementsMap.set(cordsToString(cords), element);
+      }
+    );
   }
 
   addElement<T extends typeof Element = typeof Element>(
-    props: Omit<ICreateElementProps, "view" | "cellSize">,
+    props: Omit<ICreateElementProps, "cellSize" | "canvas">,
     ElementConstructor?: T
   ) {
-    if (this.elementsMap[cordsToString(props)]) {
+    if (this.elementsMap.get(cordsToString(props))) {
       throw new Error("Element already exists");
     }
 
@@ -197,21 +174,100 @@ export class ModuleElement {
 
     const element = new Constructor({
       ...props,
-      view: this.view,
-      container: this.$container,
       cellSize: this.cellSize,
+      canvas: this.canvas,
     });
 
-    this.elementsMap[cordsToString(element)] = element;
+    this.elementsMap.set(cordsToString(element), element);
+
+    const unsubscribe = element.subscribeOnChanges(() => {
+      this.elementsMap.delete(
+        cordsToString({
+          x: element.prevX,
+          y: element.prevY,
+        })
+      );
+      this.elementsMap.set(cordsToString(element), element);
+    });
 
     element.onDestroy = () => {
-      this.elementsMap = this.elementsList.reduce(
-        (acc, current) => ({
-          ...acc,
-          ...(current !== element ? { [cordsToString(current)]: current } : {}),
-        }),
-        {}
-      );
+      this.elementsMap.delete(cordsToString(element));
+      unsubscribe();
     };
   }
+
+  deleteElement = (cords: ICords) => {
+    const element = this.getElement(cords);
+
+    if (!element) {
+      throw new Error("Element does not exist");
+    }
+
+    element.destroy();
+  };
+
+  rotate = ({ degree, centerElement }: IRotateModuleElementParams) => {
+    const { x, y } = centerElement;
+
+    this.setMapElements(
+      (element) => element !== centerElement,
+      (element) => ({
+        x:
+          (element.x - x) * ROTATE_COS[degree] -
+          (element.y - y) * ROTATE_SIN[degree] +
+          x,
+        y:
+          (element.x - x) * ROTATE_SIN[degree] +
+          (element.y - y) * ROTATE_COS[degree] +
+          y,
+      })
+    );
+  };
+
+  move = ({ direction, delta = 1 }: IMoveModuleElementParams) => {
+    switch (direction) {
+      case EMoveDirection.U:
+        this.setElementsSync(({ x, y }) => ({
+          x,
+          y: y + delta,
+        }));
+        break;
+      case EMoveDirection.R:
+        this.setElementsSync(({ x, y }) => ({
+          x: x + delta,
+          y,
+        }));
+        break;
+      case EMoveDirection.D:
+        this.setElementsSync(({ x, y }) => ({
+          x,
+          y: y - delta,
+        }));
+        break;
+      case EMoveDirection.L:
+        this.setElementsSync(({ x, y }) => ({
+          x: x - delta,
+          y,
+        }));
+        break;
+    }
+  };
+
+  merge = (source: ModuleElement) => {
+    source.forEach((element) => {
+      this.addElement(element);
+    });
+    source.destroy();
+  };
+
+  destroy = () => {
+    this.elementsList.forEach((element) => {
+      element.destroy();
+    });
+    this.onDestroy();
+  };
+
+  onDestroy = () => {
+    console.warn("Destroy called, but not implemented");
+  };
 }

@@ -14,10 +14,10 @@ export class Eat extends Element {
     fillColor: string
   ) {
     super({
-      view: snakeGame.view,
       ...initCords,
       cellSize: snakeGame.model.cellSize,
       fillColor,
+      canvas: snakeGame.canvas,
     });
     this.value = value;
     this.snakeGame = snakeGame;
@@ -26,7 +26,9 @@ export class Eat extends Element {
   }
 
   rerender() {
-    this.x = getRandomNumber(0, this.snakeGame.model.boardSizeX);
-    this.y = getRandomNumber(0, this.snakeGame.model.boardSizeY);
+    this.move({
+      x: getRandomNumber(0, this.snakeGame.model.boardSizeX),
+      y: getRandomNumber(0, this.snakeGame.model.boardSizeY),
+    });
   }
 }

@@ -1,72 +1,58 @@
-import { View } from "@/core/view";
-import { EBoardLineDirection } from "@/core/interfaces";
 import { BoardModel } from "@/core/board/board.model";
 import { IInitBoardProps } from "@/core/board/interfaces";
+import { Canvas } from "@/core/canvas/canvas";
+import { EBoardLineDirection } from "@/core/interfaces";
 
 export class Board {
-  private readonly view: View;
   private readonly model: BoardModel;
+  private readonly canvas: Canvas;
 
-  constructor({ boardSize, cellSize, view }: IInitBoardProps) {
-    this.view = view;
+  constructor({ boardSize, cellSize, canvas }: IInitBoardProps) {
     this.model = new BoardModel(boardSize, cellSize);
+    this.canvas = canvas;
   }
 
-  private setVerticalLineHeightCss(height: string) {
-    this.view.setCssVar("--vertical-line-height", height);
-  }
-
-  private setHorizontalLineWidthCss(width: string) {
-    this.view.setCssVar("--horizontal-line-width", width);
-  }
-
-  private setCellSizeCss(size: number) {
-    this.view.setCssVar("--cell-size", size + "px");
-  }
-
-  private createBoardLine(direction: EBoardLineDirection, margin: number = 0) {
-    const elemClassName =
-      direction === EBoardLineDirection.Horizontal
-        ? "borderHorizontalLine"
-        : "borderVerticalLine";
-
-    const $line = this.view.createElement("div", [elemClassName]);
+  private readonly drawBoardLine = (
+    direction: EBoardLineDirection,
+    margin: number = 0
+  ) => {
+    const {
+      canvas: { drawLine },
+    } = this;
 
     if (direction === EBoardLineDirection.Horizontal) {
-      $line.style.marginTop = margin * this.model.cellSize + "px";
+      drawLine(
+        0,
+        margin,
+        this.model.boardSizeX * this.model.cellSize,
+        margin,
+        "#b9b9b9"
+      );
     } else {
-      $line.style.marginLeft = margin * this.model.cellSize + "px";
+      drawLine(
+        margin,
+        0,
+        margin,
+        this.model.boardSizeY * this.model.cellSize,
+        "#b9b9b9"
+      );
     }
-
-    return $line;
-  }
+  };
 
   private renderBord() {
-    const board = this.view.createElement("div", ["board"]);
-
     for (let x = 0; x < this.model.boardSizeX + 1; x++) {
-      const line = this.createBoardLine(EBoardLineDirection.Vertical, x);
-
-      board.appendChild(line);
+      this.drawBoardLine(EBoardLineDirection.Vertical, x * this.model.cellSize);
     }
 
     for (let y = 0; y < this.model.boardSizeY + 1; y++) {
-      const line = this.createBoardLine(EBoardLineDirection.Horizontal, y);
-
-      board.appendChild(line);
+      this.drawBoardLine(
+        EBoardLineDirection.Horizontal,
+        y * this.model.cellSize
+      );
     }
-
-    this.view.renderElemToRoot(board);
   }
 
   init() {
-    const horizontalLineWidth = this.model.boardSizeX * this.model.cellSize;
-    const verticalLineHeight = this.model.boardSizeY * this.model.cellSize;
-    this.setVerticalLineHeightCss(verticalLineHeight + 1 + "px");
-    this.setHorizontalLineWidthCss(horizontalLineWidth + "px");
-    this.view.setCssVar("--game-width", horizontalLineWidth + "px");
-    this.view.setCssVar("--game-height", verticalLineHeight + "px");
-    this.setCellSizeCss(this.model.cellSize);
     this.renderBord();
   }
 }

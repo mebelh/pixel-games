@@ -1,3 +1,4 @@
+import { ICords } from "@/core/interfaces";
 import { ElementModel } from "./element.model";
 import { ElementView } from "./element.view";
 import { ICreateElementProps } from "./interfaces";
@@ -8,7 +9,7 @@ export class Element {
 
   constructor(props: ICreateElementProps) {
     this.model = new ElementModel(props);
-    this.view = new ElementView(props.view, props.container);
+    this.view = new ElementView(props.canvas);
     this.view.render(this.model);
     this.model.subscribeOnChanges(this.render);
   }
@@ -17,7 +18,7 @@ export class Element {
     return this.model.subscribeOnChanges(fn);
   };
 
-  private readonly render = (element: ElementModel) => {
+  public render = (element: ElementModel) => {
     this.view.render(element);
   };
 
@@ -25,16 +26,16 @@ export class Element {
     return this.model.x;
   }
 
-  set x(x: ElementModel["x"]) {
-    this.model.x = x;
+  set x(_) {
+    throw new Error("You ned use Element.move(cords)!");
   }
 
   get y(): ElementModel["y"] {
     return this.model.y;
   }
 
-  set y(y: ElementModel["y"]) {
-    this.model.y = y;
+  set y(_) {
+    throw new Error("You ned use Element.move(cords)!");
   }
 
   get prevX(): ElementModel["prevX"] {
@@ -61,9 +62,14 @@ export class Element {
     return this.model.id;
   }
 
+  // TODO Добавить изменение цвета
+  public move = (cords: ICords) => {
+    this.model.move(cords);
+  };
+
   destroy(): void {
-    this.view.destroy();
-    // this.model.destroy();
+    this.view.destroy(this.model);
+    this.model.destroy();
     this.onDestroy();
   }
 

@@ -1,15 +1,13 @@
+import { EMoveDirection } from "@/core/moduleElement/interfaces";
 import { ModuleElement } from "@/core/moduleElement/moduleElement";
-import {
-  ETankDirection,
-  IInitTankProps,
-} from "@/games/tankGame/tank/interface";
-import { getTankModel, TankModel } from "@/games/tankGame/tank/tank.model";
+import { TObservableOn } from "@/core/observeble/interfaces";
+import { makeObservable } from "@/core/observeble/observable";
 import { getRandomNumber } from "@/core/utils";
 import { COS, SIN, TANK_GAME_ROTATE_MAP } from "@/games/tankGame/constants";
 import { Missile } from "@/games/tankGame/missile/missile";
+import { IInitTankProps } from "@/games/tankGame/tank/interface";
+import { getTankModel, TankModel } from "@/games/tankGame/tank/tank.model";
 import { TankGame } from "@/games/tankGame/tankGame";
-import { TObservableOn } from "@/core/observeble/interfaces";
-import { makeObservable } from "@/core/observeble/observable";
 
 export class Tank extends ModuleElement {
   model: TankModel;
@@ -64,16 +62,16 @@ export class Tank extends ModuleElement {
       this.syncDirection();
     });
 
-    tankGame.view.addEventListenerToRoot("keydown", (event) => {
-      switch (event.code) {
+    tankGame.view.onKeydown((code) => {
+      switch (code) {
         case "ArrowLeft":
           this.rotate({
-            direction: ETankDirection.L,
+            direction: EMoveDirection.L,
           });
           break;
         case "ArrowRight":
           this.rotate({
-            direction: ETankDirection.R,
+            direction: EMoveDirection.R,
           });
           break;
         case "ArrowUp":
@@ -102,18 +100,18 @@ export class Tank extends ModuleElement {
 
     if (xGun === xCenter) {
       if (yGun < yCenter) {
-        this.model.direction = ETankDirection.D;
+        this.model.direction = EMoveDirection.D;
         return;
       }
-      this.model.direction = ETankDirection.U;
+      this.model.direction = EMoveDirection.U;
       return;
     }
 
     if (xGun < xCenter) {
-      this.model.direction = ETankDirection.L;
+      this.model.direction = EMoveDirection.L;
       return;
     }
-    this.model.direction = ETankDirection.R;
+    this.model.direction = EMoveDirection.R;
   }
 
   rotate = ({ direction }: Pick<TankModel, "direction">) => {
@@ -159,12 +157,12 @@ export class Tank extends ModuleElement {
 
   get isCanGo(): boolean {
     return !(
-      (!this.gunElement.x && this.model.direction === ETankDirection.L) ||
-      (!this.gunElement.y && this.model.direction === ETankDirection.D) ||
+      (!this.gunElement.x && this.model.direction === EMoveDirection.L) ||
+      (!this.gunElement.y && this.model.direction === EMoveDirection.D) ||
       (this.gunElement.x === this.tankGame.model.boardSizeX - 1 &&
-        this.model.direction === ETankDirection.R) ||
+        this.model.direction === EMoveDirection.R) ||
       (this.gunElement.y === this.tankGame.model.boardSizeY - 1 &&
-        this.model.direction === ETankDirection.U)
+        this.model.direction === EMoveDirection.U)
     );
   }
 
@@ -172,31 +170,8 @@ export class Tank extends ModuleElement {
     if (!this.isCanGo) {
       return;
     }
-    switch (this.model.direction) {
-      case ETankDirection.U:
-        this.setElementsSync(({ x, y }) => ({
-          x,
-          y: y + 1,
-        }));
-        break;
-      case ETankDirection.R:
-        this.setElementsSync(({ x, y }) => ({
-          x: x + 1,
-          y,
-        }));
-        break;
-      case ETankDirection.D:
-        this.setElementsSync(({ x, y }) => ({
-          x,
-          y: y - 1,
-        }));
-        break;
-      case ETankDirection.L:
-        this.setElementsSync(({ x, y }) => ({
-          x: x - 1,
-          y,
-        }));
-        break;
-    }
+    this.move({
+      direction: this.model.direction,
+    });
   }
 }

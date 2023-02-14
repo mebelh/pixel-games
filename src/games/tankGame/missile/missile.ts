@@ -1,17 +1,17 @@
 import { Element } from "@/core/element/element";
 import { ICreateElementProps } from "@/core/element/interfaces";
-import { ETankDirection } from "@/games/tankGame/tank/interface";
 import { TBoardSize } from "@/core/board/interfaces";
+import { EMoveDirection } from "@/core/moduleElement/interfaces";
 
 export class Missile extends Element {
-  private readonly direction: ETankDirection;
+  private readonly direction: EMoveDirection;
   private interval: ReturnType<typeof setInterval> | number = 0;
   private readonly fps: number = 10;
   boardSize: TBoardSize;
 
   constructor(
     initProps: ICreateElementProps & {
-      direction: ETankDirection;
+      direction: EMoveDirection;
       boardSize: TBoardSize;
     }
   ) {
@@ -25,16 +25,16 @@ export class Missile extends Element {
 
   private go() {
     switch (this.direction) {
-      case ETankDirection.U:
+      case EMoveDirection.U:
         this.y++;
         break;
-      case ETankDirection.L:
+      case EMoveDirection.L:
         this.x--;
         break;
-      case ETankDirection.D:
+      case EMoveDirection.D:
         this.y--;
         break;
-      case ETankDirection.R:
+      case EMoveDirection.R:
         this.x++;
         break;
     }

@@ -51,7 +51,6 @@ export class SnakeGameModel extends GameModel {
 
   getEat(eatId: string): Eat {
     const eat = this.eatMap[eatId];
-
     if (!eat) {
       throw new Error("Eat not found");
     }

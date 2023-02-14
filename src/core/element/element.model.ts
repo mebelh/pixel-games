@@ -1,4 +1,5 @@
 import { ICreateElementProps } from "@/core/element/interfaces";
+import { ICords } from "@/core/interfaces";
 import { cordsToString } from "@/core/utils";
 import { generateId } from "@/games/snakeGame/utils/generateId";
 import { Model } from "@/core/model";
@@ -28,20 +29,8 @@ export class ElementModel extends Model<ElementModel> {
     return this._x;
   }
 
-  set x(x: ElementModel["_x"]) {
-    this._prevX = this._x;
-    this._x = x;
-    this.emitChange();
-  }
-
   get y(): ElementModel["_y"] {
     return this._y;
-  }
-
-  set y(y: ElementModel["_y"]) {
-    this._prevY = this._y;
-    this._y = y;
-    this.emitChange();
   }
 
   get fillColor(): ElementModel["_fillColor"] {
@@ -64,6 +53,14 @@ export class ElementModel extends Model<ElementModel> {
   get stringCords() {
     return cordsToString(this);
   }
+
+  public readonly move = (cords: ICords) => {
+    this._prevX = this._x;
+    this._prevY = this._y;
+    this._x = cords.x;
+    this._y = cords.y;
+    this.emitChange();
+  };
 
   get cellSizeStyle(): string {
     return this.cellSize + "px";

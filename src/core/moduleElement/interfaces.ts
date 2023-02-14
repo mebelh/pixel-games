@@ -1,5 +1,6 @@
 import { Element } from "@/core/element/element";
 import { ICords } from "@/core/interfaces";
+import { ModuleElement } from "@/core/moduleElement/moduleElement";
 
 export interface IElementsMap {
   [key: string]: Element | null;
@@ -38,3 +39,38 @@ export type TFilterElementsCallback = (
   index: number,
   elements: Element[]
 ) => boolean;
+
+export type TRotateDegree = 0 | 90 | 180 | 270;
+
+export type TRotateDegreeMap = {
+  [key in TRotateDegree]: number;
+};
+
+export interface IRotateModuleElementParams {
+  degree: TRotateDegree;
+  centerElement: ICords;
+}
+
+export enum EMoveDirection {
+  U = "U",
+  R = "R",
+  D = "D",
+  L = "L",
+}
+
+interface ICreateElementParams {
+  x: number;
+  y: number;
+  fillColor: string;
+}
+
+export interface ICreateModuleElementParams {
+  initElements?: ICreateElementParams[];
+  canvas: ModuleElement["canvas"];
+  cellSize: ModuleElement["cellSize"];
+}
+
+export interface IMoveModuleElementParams {
+  direction: EMoveDirection;
+  delta?: number;
+}

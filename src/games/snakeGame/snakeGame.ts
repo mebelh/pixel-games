@@ -13,6 +13,10 @@ export class SnakeGame extends Game<SnakeGameModel> {
     });
     this.renderEat(initEatNumber);
     this.addRandomSnake();
+    for (let i = 0; i < 100000; i++) {
+      this.addRandomSnake();
+      console.log("add");
+    }
   }
 
   addRandomSnake() {

@@ -18,12 +18,12 @@ export class LifeGame extends Game<GameModel> {
       model: new LifeGameModel(props),
     });
 
-    this.elements = new ModuleElement(this.view, this.model.cellSize);
+    this.elements = this.addModuleElement({});
     this.fillColor = getRandomColor();
     this.isMouseDown = false;
   }
 
-  go() {
+  go = () => {
     this.elements.forEachAsync((element, _, __, addElement, deleteElement) => {
       const elementNeighbours = getNeighborsOfPoint(element);
       const notEmptyNeighbours = elementNeighbours.filter((neighbour) =>
@@ -54,7 +54,7 @@ export class LifeGame extends Game<GameModel> {
         }
       });
     });
-  }
+  };
 
   isInsideBoard(cords: ICords): boolean {
     return Boolean(
@@ -65,21 +65,24 @@ export class LifeGame extends Game<GameModel> {
     );
   }
 
-  init(initialPointsNumber: number) {
+  init(initialPointsNumber: number, fps: number = 2) {
     new Array(initialPointsNumber).fill(0).forEach(() => {
       try {
-        this.elements.addElement({
-          fillColor: this.fillColor,
+        const candidate: ICords = {
           x: getRandomNumber(0, this.model.boardSizeX),
           y: getRandomNumber(0, this.model.boardSizeY),
-        });
+        };
+        if (this.elements.isEmpty(candidate)) {
+          this.elements.addElement({
+            fillColor: this.fillColor,
+            ...candidate,
+          });
+        }
       } catch (e) {
         console.log(e);
       }
     });
 
-    setInterval(() => {
-      this.go();
-    }, 500);
+    return this.loop(this.go, fps);
   }
 }

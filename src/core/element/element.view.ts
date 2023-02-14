@@ -1,48 +1,26 @@
-import { View } from "@/core/view";
+import { Canvas } from "@/core/canvas/canvas";
 import { ElementModel } from "@/core/element/element.model";
-import { setStyle } from "@/games/snakeGame/utils/setStyle";
 
 export class ElementView {
-  $el: HTMLDivElement;
   isRendered: boolean;
-  $container?: HTMLDivElement;
-  view: View;
+  canvas: Canvas;
 
-  constructor(view: View, $container?: HTMLDivElement) {
-    this.view = view;
+  constructor(canvas: ElementView["canvas"]) {
     this.isRendered = false;
-    this.$el = this.view.createElement("div");
-    this.$container = $container;
-  }
-
-  private getMarginStyle(cellSize: number, margin: number): string {
-    return cellSize * margin + "px";
+    this.canvas = canvas;
   }
 
   render(elementModel: ElementModel): void {
-    if (!this.isRendered) {
-      if (this.$container) {
-        this.$container.appendChild(this.$el);
-      } else {
-        this.view.renderElemToRoot(this.$el);
-      }
-      this.isRendered = true;
-      setStyle(this.$el, {
-        position: "absolute",
-        width: elementModel.cellSizeStyle,
-        height: elementModel.cellSizeStyle,
-        // transition: "all ease .1s",
-      });
-    }
-
-    setStyle(this.$el, {
-      background: elementModel.fillColor,
-      left: this.getMarginStyle(elementModel.cellSize, elementModel.x),
-      bottom: this.getMarginStyle(elementModel.cellSize, elementModel.y),
-    });
+    this.canvas.clearRect(elementModel.prevX, elementModel.prevY);
+    this.canvas.drawRect(
+      elementModel.x,
+      elementModel.y,
+      elementModel.fillColor
+    );
   }
 
-  destroy() {
-    this.$el.remove();
+  destroy(elementModel: ElementModel) {
+    // TODO
+    this.canvas.clearRect(elementModel.x, elementModel.y);
   }
 }

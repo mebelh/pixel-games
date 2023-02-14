@@ -1,4 +1,4 @@
-import { ETankDirection } from "@/games/tankGame/tank/interface";
+import { EMoveDirection } from "@/core/moduleElement/interfaces";
 import { TDegree, TDegreeMap } from "@/games/tankGame/interfaces";
 
 export const CELL_SIZE = 2;
@@ -18,10 +18,10 @@ export const SIN: TDegreeMap = {
 };
 
 export const TANK_GAME_ROTATE_MAP: {
-  [key in ETankDirection]: TDegree;
+  [key in EMoveDirection]: TDegree;
 } = {
-  [ETankDirection.R]: 270,
-  [ETankDirection.L]: 90,
-  [ETankDirection.D]: 180,
-  [ETankDirection.U]: 0,
+  [EMoveDirection.R]: 270,
+  [EMoveDirection.L]: 90,
+  [EMoveDirection.D]: 180,
+  [EMoveDirection.U]: 0,
 };

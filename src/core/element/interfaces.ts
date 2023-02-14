@@ -1,11 +1,10 @@
-import { ElementModel } from "src/core/element/element.model";
-import { View } from "@/core/view";
+import { ElementModel } from "@/core/element/element.model";
+import { ElementView } from "@/core/element/element.view";
 
 export interface ICreateElementProps {
   x: ElementModel["_x"];
   y: ElementModel["_y"];
   fillColor: ElementModel["fillColor"];
   cellSize: ElementModel["cellSize"];
-  view: View;
-  container?: HTMLDivElement;
+  canvas: ElementView["canvas"];
 }

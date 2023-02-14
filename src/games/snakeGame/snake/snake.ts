@@ -21,7 +21,10 @@ export class Snake extends ModuleElement {
     bodyFillColor: string,
     snakeGame: Snake["snakeGame"]
   ) {
-    super(snakeGame.view, snakeGame.model.cellSize);
+    super({
+      cellSize: snakeGame.model.cellSize,
+      canvas: snakeGame.canvas,
+    });
 
     this.bodyFillColor = bodyFillColor;
     this.headFillColor = headFillColor;
@@ -45,29 +48,33 @@ export class Snake extends ModuleElement {
     return this.elementsList[this.elementsList.length - 1];
   }
 
-  addSnakeElement(props: Omit<ICreateElementProps, "view" | "cellSize">) {
+  addSnakeElement(props: Omit<ICreateElementProps, "cellSize" | "canvas">) {
     this.addElement(props);
   }
 
   addBodyElement() {
-    const tailCords = Object.assign(
-      {},
-      {
-        x: this.tail.x,
-        y: this.tail.y,
-      }
-    );
+    const tailCords: ICords = {
+      x: this.tail.x,
+      y: this.tail.y,
+    };
+
+    console.log(tailCords);
 
     this.go();
 
-    this.addSnakeElement({
+    console.log(this.elementsMap);
+
+    this.addElement({
       fillColor: this.bodyFillColor,
       ...tailCords,
     });
   }
 
   addHeadElement(
-    props: Omit<ICreateElementProps, "fillColor" | "view" | "cellSize">
+    props: Omit<
+      ICreateElementProps,
+      "fillColor" | "view" | "cellSize" | "canvas"
+    >
   ) {
     this.addSnakeElement({
       fillColor: this.headFillColor,
@@ -108,7 +115,8 @@ export class Snake extends ModuleElement {
     }
   }
 
-  go() {
+  go = () => {
+    console.log("go");
     if (this.isKilled) {
       return;
     }
@@ -134,12 +142,10 @@ export class Snake extends ModuleElement {
 
     try {
       const eat = this.snakeGame.model.getEat(cordsToString(this.head));
-
       eat.rerender();
-
       this.addBodyElement();
     } catch (e) {}
-  }
+  };
 
   kill() {
     this.isKilled = true;
@@ -161,12 +167,30 @@ export class Snake extends ModuleElement {
       ...startPosition,
     });
     this.addBodyElement();
+
     this.addBodyElement();
 
-    this.renderInterval = setInterval(() => {
-      const direction = myMinDistanceSimpleAlg(this);
-      this.setDirection(direction);
-      this.go();
-    }, 10);
+    // this.renderInterval = setInterval(() => {
+    //   const direction = myMinDistanceSimpleAlg(this);
+    //   this.setDirection(direction);
+    //   this.go();
+    // }, 30);
+
+    let last = new Date().getTime();
+
+    const animate = () => {
+      requestAnimationFrame(() => {
+        animate();
+        const curr = new Date().getTime();
+        if (curr - last > 100) {
+          const direction = myMinDistanceSimpleAlg(this);
+          this.setDirection(direction);
+          this.go();
+          last = curr;
+        }
+      });
+    };
+
+    animate();
   }
 }
