@@ -1,14 +1,14 @@
 import { GameModel } from "@/core/game/game.model";
+import { ICords } from "@/core/interfaces";
+import { cordsToString } from "@/core/utils";
+import { Eat } from "@/games/snakeGame/eat/eat";
 import {
   IEatMap,
   ISnakeMap,
   TInitSnakeGameModelProps,
 } from "@/games/snakeGame/interfaces";
-import { getRandomColor } from "@/games/snakeGame/utils/getRandomColor";
-import { Eat } from "@/games/snakeGame/eat/eat";
 import { Snake } from "@/games/snakeGame/snake/snake";
-import { cordsToString } from "@/core/utils";
-import { ICords } from "@/core/interfaces";
+import { getRandomColor } from "@/games/snakeGame/utils/getRandomColor";
 
 export class SnakeGameModel extends GameModel {
   private readonly snakeMap: ISnakeMap;
@@ -27,9 +27,12 @@ export class SnakeGameModel extends GameModel {
 
   getSnakeElement(cords: ICords) {
     return Object.values(this.snakeMap).find((snake) => {
-      return snake.elementsList.find(
-        (el) => el.x === cords.x && el.y === cords.y
-      );
+      return snake.elementsMap.get(cordsToString(cords));
+      // const elem2 = snake.elementsList.find(
+      //   (el) => el.x === cords.x && el.y === cords.y
+      // );
+      //
+      // console.log(elem === elem2);
     });
   }
 

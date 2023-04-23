@@ -58,11 +58,7 @@ export class Snake extends ModuleElement {
       y: this.tail.y,
     };
 
-    console.log(tailCords);
-
     this.go();
-
-    console.log(this.elementsMap);
 
     this.addElement({
       fillColor: this.bodyFillColor,
@@ -116,7 +112,6 @@ export class Snake extends ModuleElement {
   }
 
   go = () => {
-    console.log("go");
     if (this.isKilled) {
       return;
     }
@@ -180,6 +175,9 @@ export class Snake extends ModuleElement {
 
     const animate = () => {
       requestAnimationFrame(() => {
+        if (this.isKilled) {
+          return;
+        }
         animate();
         const curr = new Date().getTime();
         if (curr - last > 100) {
