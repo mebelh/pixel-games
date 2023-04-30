@@ -37,7 +37,7 @@ export class Canvas {
     this.ctx.fillStyle = "white";
     this.ctx.fillRect(
       x * this.cellSize + 2,
-      Math.abs(y * this.cellSize - this.width * this.cellSize - 2) -
+      Math.abs(y * this.cellSize - this.height * this.cellSize - 2) -
         this.cellSize,
       this.cellSize - 2,
       this.cellSize - 2
@@ -48,7 +48,7 @@ export class Canvas {
     this.ctx.fillStyle = color ?? "black";
     this.ctx.fillRect(
       x * this.cellSize + 2,
-      Math.abs(y * this.cellSize - this.width * this.cellSize - 2) -
+      Math.abs(y * this.cellSize - this.height * this.cellSize - 2) -
         this.cellSize,
       this.cellSize - 2,
       this.cellSize - 2

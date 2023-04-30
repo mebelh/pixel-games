@@ -18,12 +18,12 @@ export class LifeGame extends Game<GameModel> {
       model: new LifeGameModel(props),
     });
 
-    this.elements = this.addModuleElement({});
+    this.elements = this.createModuleElement({});
     this.fillColor = getRandomColor();
     this.isMouseDown = false;
   }
 
-  go = () => {
+  public go = () => {
     this.elements.forEachAsync((element, _, __, addElement, deleteElement) => {
       const elementNeighbours = getNeighborsOfPoint(element);
       const notEmptyNeighbours = elementNeighbours.filter((neighbour) =>
@@ -56,7 +56,7 @@ export class LifeGame extends Game<GameModel> {
     });
   };
 
-  isInsideBoard(cords: ICords): boolean {
+  public isInsideBoard(cords: ICords): boolean {
     return Boolean(
       cords.x >= 0 &&
         cords.y >= 0 &&
@@ -65,7 +65,7 @@ export class LifeGame extends Game<GameModel> {
     );
   }
 
-  init(initialPointsNumber: number, fps: number = 2) {
+  public init(initialPointsNumber: number, fps: number = 2) {
     new Array(initialPointsNumber).fill(0).forEach(() => {
       try {
         const candidate: ICords = {

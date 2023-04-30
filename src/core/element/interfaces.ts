@@ -7,4 +7,5 @@ export interface ICreateElementProps {
   fillColor: ElementModel["fillColor"];
   cellSize: ElementModel["cellSize"];
   canvas: ElementView["canvas"];
+  isNoReactive?: boolean;
 }

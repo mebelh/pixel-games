@@ -119,9 +119,10 @@ export class ModuleElement {
       changeFn(element, index, elements, addElement, deleteElement)
     );
 
+    console.log(newCordsList);
+
     newCordsList.forEach((cords, index) => {
       const element = elementsList[index];
-
       element.move(cords);
     });
 
@@ -227,25 +228,25 @@ export class ModuleElement {
   move = ({ direction, delta = 1 }: IMoveModuleElementParams) => {
     switch (direction) {
       case EMoveDirection.U:
-        this.setElementsSync(({ x, y }) => ({
+        this.setElementsAsync(({ x, y }) => ({
           x,
           y: y + delta,
         }));
         break;
       case EMoveDirection.R:
-        this.setElementsSync(({ x, y }) => ({
+        this.setElementsAsync(({ x, y }) => ({
           x: x + delta,
           y,
         }));
         break;
       case EMoveDirection.D:
-        this.setElementsSync(({ x, y }) => ({
+        this.setElementsAsync(({ x, y }) => ({
           x,
           y: y - delta,
         }));
         break;
       case EMoveDirection.L:
-        this.setElementsSync(({ x, y }) => ({
+        this.setElementsAsync(({ x, y }) => ({
           x: x - delta,
           y,
         }));
@@ -253,17 +254,21 @@ export class ModuleElement {
     }
   };
 
-  merge = (source: ModuleElement) => {
+  public merge = (source: ModuleElement) => {
     source.forEach((element) => {
       this.addElement(element);
     });
     source.destroy();
   };
 
-  destroy = () => {
+  public clear = () => {
     this.elementsList.forEach((element) => {
       element.destroy();
     });
+  };
+
+  public destroy = () => {
+    this.clear();
     this.onDestroy();
   };
 

@@ -11,7 +11,7 @@ export class Element {
     this.model = new ElementModel(props);
     this.view = new ElementView(props.canvas);
     this.view.render(this.model);
-    this.model.subscribeOnChanges(this.render);
+    if (!props.isNoReactive) this.model.subscribeOnChanges(this.render);
   }
 
   public subscribeOnChanges: ElementModel["subscribeOnChanges"] = (fn) => {

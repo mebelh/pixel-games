@@ -90,8 +90,8 @@ export abstract class Game<T extends GameModel> {
     };
   };
 
-  addModuleElement = (
-    params: Omit<ICreateModuleElementParams, "canvas" | "cellSize">
+  createModuleElement = (
+    params: Omit<ICreateModuleElementParams, "canvas" | "cellSize"> = {}
   ): ModuleElement => {
     const moduleElement = new ModuleElement({
       ...params,
