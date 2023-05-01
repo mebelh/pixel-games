@@ -18,8 +18,10 @@ export abstract class Figure extends ModuleElement {
   public moveLeft = () => {
     const isCantMove = this.elementsList.find((el) => !el.x);
 
-    if (isCantMove) {
-      this.throwCantMoveError();
+    const isCanMoveLeft = this.checkCanMoveLeft();
+
+    if (isCantMove ?? !isCanMoveLeft) {
+      return;
     }
 
     this.move({
@@ -29,11 +31,13 @@ export abstract class Figure extends ModuleElement {
 
   public moveRight = () => {
     const isCantMove = this.elementsList.find(
-      (el) => el.x === TETRIS_GAME_BOARD_SIZE[1]
+      (el) => el.x === TETRIS_GAME_BOARD_SIZE[0] - 1
     );
 
-    if (isCantMove) {
-      this.throwCantMoveError();
+    const isCanMoveRight = this.checkCanMoveRight();
+
+    if (isCantMove ?? !isCanMoveRight) {
+      return;
     }
 
     this.move({
@@ -42,12 +46,13 @@ export abstract class Figure extends ModuleElement {
   };
 
   public moveDown = () => {
-    const isCantMove = this.elementsList.find(
-      (el) => el.y === TETRIS_GAME_BOARD_SIZE[0]
-    );
+    const isCantMoveX = this.elementsList.find((el) => !el.y);
+    const isCanMoveY = this.checkCanMoveDown();
 
-    if (isCantMove) {
-      this.throwCantMoveError();
+    if (isCantMoveX ?? !isCanMoveY) {
+      this.onJoin();
+
+      return;
     }
 
     this.move({
@@ -59,7 +64,7 @@ export abstract class Figure extends ModuleElement {
     this.rotate({
       centerElement: {
         x: this.centerElementLeft.x,
-        y: this.centerElementRight.y,
+        y: this.centerElementLeft.y,
       },
       degree: 90,
     });
@@ -68,14 +73,24 @@ export abstract class Figure extends ModuleElement {
   public rotateRight = () => {
     this.rotate({
       centerElement: {
-        x: this.centerElementLeft.x,
+        x: this.centerElementRight.x,
         y: this.centerElementRight.y,
       },
       degree: 270,
     });
   };
 
-  private throwCantMoveError() {
-    throw new Error("Cant move!");
-  }
+  public onJoin = () => {};
+
+  checkCanMoveDown = (): boolean => {
+    throw new Error("Method checkCanMoveDown not implemented.");
+  };
+
+  checkCanMoveLeft = (): boolean => {
+    throw new Error("Method checkCanMoveLeft not implemented.");
+  };
+
+  checkCanMoveRight = (): boolean => {
+    throw new Error("Method checkCanMoveRight not implemented.");
+  };
 }

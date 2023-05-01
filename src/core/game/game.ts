@@ -96,7 +96,6 @@ export abstract class Game<T extends GameModel> {
     const moduleElement = new ModuleElement({
       ...params,
       canvas: this.canvas,
-      cellSize: this.model.cellSize,
     });
     this.model.addModuleElement(moduleElement);
 

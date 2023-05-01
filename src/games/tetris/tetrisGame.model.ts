@@ -1,7 +1,8 @@
 import { GameModel } from "@/core/game/game.model";
+import { EMoveDirection } from "@/core/moduleElement/interfaces";
 import { ModuleElement } from "@/core/moduleElement/moduleElement";
-import { TFigure, TInitTetrisGameModelProps } from "./interfaces";
 import { TETRIS_GAME_BOARD_SIZE } from "./constants";
+import { TFigure, TInitTetrisGameModelProps } from "./interfaces";
 
 export class TetrisGameModel extends GameModel {
   private _allBlocks: ModuleElement | null = null;
@@ -15,7 +16,7 @@ export class TetrisGameModel extends GameModel {
     });
   }
 
-  private get allBlocks(): ModuleElement {
+  get allBlocks(): ModuleElement {
     if (!this._allBlocks) {
       throw new Error("All blocks not initialized");
     }
@@ -28,6 +29,7 @@ export class TetrisGameModel extends GameModel {
 
   public restart = () => {
     this.allBlocks.clear();
+    this.activeFigure.clear();
     this._activeFigure = null;
   };
 
@@ -40,5 +42,48 @@ export class TetrisGameModel extends GameModel {
 
   public setActiveFigure = (figure: TFigure) => {
     this._activeFigure = figure;
+  };
+
+  public joinActiveFigure = () => {
+    this.allBlocks.merge(this.activeFigure);
+    this.checkFullLines();
+  };
+
+  public clearLine = (lineNumber: number) => {
+    this.allBlocks.forEachAsync(({ element, deleteElement }) => {
+      if (element.y === lineNumber) {
+        deleteElement(element);
+      }
+    });
+  };
+
+  public checkFullLines = () => {
+    const numberOfElemsInLineMap = new Map<number, number>();
+
+    this.allBlocks.forEach((element) => {
+      const numberOfElemsInLine = numberOfElemsInLineMap.get(element.y);
+      numberOfElemsInLineMap.set(
+        element.y,
+        numberOfElemsInLine ? numberOfElemsInLine + 1 : 1
+      );
+    });
+    const fullLines = Array.from(numberOfElemsInLineMap.keys()).filter(
+      (key) => numberOfElemsInLineMap.get(key) === TETRIS_GAME_BOARD_SIZE[0]
+    );
+
+    fullLines.forEach((lineNumber) => {
+      this.clearLine(lineNumber);
+      console.log(lineNumber);
+      this.allBlocks.setMapElements(
+        (el) => el.y > lineNumber,
+        (element) => {
+          console.log(element);
+          return {
+            x: element.x,
+            y: element.y - 1,
+          };
+        }
+      );
+    });
   };
 }

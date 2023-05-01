@@ -12,8 +12,15 @@ export class ElementModel extends Model<ElementModel> {
   _fillColor: string;
   readonly cellSize: number;
   id: string;
+  isNoReactive: boolean = false;
 
-  constructor({ x, y, fillColor, cellSize }: ICreateElementProps) {
+  constructor({
+    x,
+    y,
+    fillColor,
+    cellSize,
+    isNoReactive = false,
+  }: ICreateElementProps) {
     super();
     this._y = y;
     this._x = x;
@@ -23,6 +30,7 @@ export class ElementModel extends Model<ElementModel> {
     this._fillColor = fillColor;
     this.cellSize = cellSize;
     this.id = generateId();
+    this.isNoReactive = isNoReactive;
   }
 
   get x(): ElementModel["_x"] {
@@ -59,7 +67,7 @@ export class ElementModel extends Model<ElementModel> {
     this._prevY = this._y;
     this._x = cords.x;
     this._y = cords.y;
-    this.emitChange();
+    if (!this.isNoReactive) this.emitChange();
   };
 
   get cellSizeStyle(): string {

@@ -1,43 +1,43 @@
-import { Element } from "@/core/element/element";
+import { Canvas } from "@/core/canvas/canvas";
 import { ICords } from "@/core/interfaces";
-import { ModuleElement } from "@/core/moduleElement/moduleElement";
-
-export interface IElementsMap {
-  [key: string]: Element | null;
-}
+import { ModuleElementSection } from "@/core/moduleElement/moduleElementSection";
 
 export type TForEachElementCallback = (
-  element: Element,
+  element: ModuleElementSection,
   index: number,
-  elements: Element[]
+  elements: ModuleElementSection[]
 ) => void;
 
+interface IForEachAsyncElementCallbackParams {
+  element: ICords;
+  index: number;
+  elements: ICords[];
+  addElement: (cords: ICords) => void;
+  deleteElement: (cords: ICords) => void;
+}
+
 export type TForEachAsyncElementCallback = (
-  element: ICords,
-  index: number,
-  elements: ICords[],
-  addElement: (cords: ICords) => void,
-  deleteElement: (cords: ICords) => void
+  params: IForEachAsyncElementCallbackParams
 ) => void;
 
 export type TChangeElementCordCallback = (
-  element: Element,
+  element: ModuleElementSection,
   index: number,
-  elements: Element[]
+  elements: ModuleElementSection[]
 ) => ICords;
 
 export type TChangeElementCordCallbackAsync = (
-  element: Element,
+  element: ModuleElementSection,
   index: number,
-  elements: Element[],
+  elements: ModuleElementSection[],
   addElement: (cords: ICords) => void,
   deleteElement: (cords: ICords) => void
 ) => ICords;
 
 export type TFilterElementsCallback = (
-  element: Element,
+  element: ModuleElementSection,
   index: number,
-  elements: Element[]
+  elements: ModuleElementSection[]
 ) => boolean;
 
 export type TRotateDegree = 0 | 90 | 180 | 270;
@@ -66,11 +66,21 @@ interface ICreateElementParams {
 
 export interface ICreateModuleElementParams {
   initElements?: ICreateElementParams[];
-  canvas: ModuleElement["canvas"];
-  cellSize: ModuleElement["cellSize"];
+  canvas: Canvas;
 }
+
+export type TInitModuleElementModelParams = Omit<
+  ICreateModuleElementParams,
+  "canvas"
+>;
 
 export interface IMoveModuleElementParams {
   direction: EMoveDirection;
   delta?: number;
+}
+
+export interface ICreateModuleElementSectionParams {
+  x: ModuleElementSection["x"];
+  y: ModuleElementSection["y"];
+  fillColor: ModuleElementSection["fillColor"];
 }

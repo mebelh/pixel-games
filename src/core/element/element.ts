@@ -18,8 +18,9 @@ export class Element {
     return this.model.subscribeOnChanges(fn);
   };
 
-  public render = (element: ElementModel) => {
-    this.view.render(element);
+  public render = () => {
+    this.view.render(this.model);
+    this.model.emitChange();
   };
 
   get x(): ElementModel["x"] {

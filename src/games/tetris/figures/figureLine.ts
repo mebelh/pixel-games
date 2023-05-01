@@ -9,25 +9,25 @@ export class FigureLine extends Figure {
         {
           x: 3,
           y: 19,
-          fillColor: "red",
+          fillColor: "#339966",
         },
         {
           x: 4,
           y: 19,
-          fillColor: "red",
+          fillColor: "#339966",
         },
         {
           x: 5,
           y: 19,
-          fillColor: "red",
+          fillColor: "#339966",
         },
         {
           x: 6,
           y: 19,
-          fillColor: "red",
+          fillColor: "#339966",
         },
       ],
-      centerElementsIdx: [1, 2],
+      centerElementsIdx: [1, 1],
     });
   }
 }

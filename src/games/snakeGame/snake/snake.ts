@@ -2,7 +2,6 @@ import { ModuleElement } from "@/core/moduleElement/moduleElement";
 import { ICreateElementProps } from "@/core/element/interfaces";
 import { ICords } from "@/core/interfaces";
 import { ESnakeDirection } from "@/games/snakeGame/snake/interfaces";
-import { generateId } from "@/games/snakeGame/utils/generateId";
 import { cordsToString, getRandomNumber } from "@/core/utils";
 import myMinDistanceSimpleAlg from "@/games/snakeGame/algorithms/myMinDistanceSimple";
 import { SnakeGame } from "@/games/snakeGame/snakeGame";
@@ -11,7 +10,6 @@ export class Snake extends ModuleElement {
   readonly bodyFillColor: string;
   readonly headFillColor: string;
   readonly snakeGame: SnakeGame;
-  readonly id: string;
   direction: ESnakeDirection;
   isKilled: boolean = false;
   renderInterval?: ReturnType<typeof setInterval>;
@@ -22,7 +20,6 @@ export class Snake extends ModuleElement {
     snakeGame: Snake["snakeGame"]
   ) {
     super({
-      cellSize: snakeGame.model.cellSize,
       canvas: snakeGame.canvas,
     });
 
@@ -31,8 +28,6 @@ export class Snake extends ModuleElement {
 
     this.direction = ESnakeDirection.R;
     this.snakeGame = snakeGame;
-
-    this.id = generateId();
 
     this.init({
       x: getRandomNumber(0, this.snakeGame.model.boardSizeX),
